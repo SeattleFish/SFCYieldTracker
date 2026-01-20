@@ -281,12 +281,16 @@
                             <select id="cutter" required>
                                 <option value="">Select Cutter...</option>
                                 <option value="Derrell Bell">Derrell Bell</option>
-                                <option value="Minh Chau">Minh Chau</option>
-                                <option value="Juan Gomez">Juan Gomez</option>
+                                <option value="Demitri Epps">Demitri Epps</option>
+                                <option value="Jonathan Barajas">Jonathan Barajas</option>
                                 <option value="Thong Nguyen">Thong Nguyen</option>
-                                <option value="5">Mike Ross</option>
-                                <option value="6">Mike Ross</option>
-                                <option value="7">Mike Ross</option>
+                                <option value="Eliceo Casillas">Eliceo Casillas</option>
+                                <option value="Fernando Nava">Fernando Nava</option>
+                                <option value="Jose Gomez">Jose Gomez</option>
+                                <option value="Justin Tapia">Justin Tapia</option>
+                                <option value="Joe Alvarez Silva">Joe Alvarez Silva</option>
+                                <option value="Kristian Ortega">Kristian Ortega</option>
+                                <option value="Willie Holt">Willie Holt</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -333,6 +337,12 @@
                             <label>By-Product (lbs)</label>
                             <input type="number" step="0.01" id="by_product" placeholder="0.00" required>
                         </div>
+                    </div>
+
+                    <div class="form-group"
+                        style="margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--border);">
+                        <label>Supervisor Signoff</label>
+                        <input type="text" id="supervisor_name" placeholder="Enter Supervisor Name" required>
                     </div>
 
                     <button type="submit" class="btn-submit" id="submitBtn">
@@ -401,6 +411,7 @@
                 primary_yield: document.getElementById('primary_yield').value,
                 usable_trim: document.getElementById('usable_trim').value,
                 by_product: document.getElementById('by_product').value,
+                supervisor_name: document.getElementById('supervisor_name').value,
                 start_time: startDateTime.toISOString(),
                 end_time: endDateTime.toISOString()
             };
