@@ -1,0 +1,102 @@
+{
+    "name": "Seafood Yield Tracker - Entry & Calculation",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "yield-entry",
+                "options": {}
+            },
+            "id": "e2d7e974-5f5a-4971-97b7-6bcfc23945a0",
+            "name": "Webhook",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                450,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "jsCode": "const items = $input.all();\n\nreturn items.map(item => {\n  const data = item.json.body;\n  \n  const sourceWeight = parseFloat(data.source_weight);\n  const primaryYield = parseFloat(data.primary_yield);\n  const usableTrim = parseFloat(data.usable_trim);\n  const byProduct = parseFloat(data.by_product);\n  \n  const startTime = DateTime.fromISO(data.start_time);\n  const endTime = DateTime.fromISO(data.end_time);\n  \n  const durationHours = endTime.diff(startTime, 'hours').hours;\n  \n  return {\n    json: {\n      ...data,\n      yield_primary_pct: (primaryYield / sourceWeight) * 100,\n      yield_trim_pct: (usableTrim / sourceWeight) * 100,\n      yield_byproduct_pct: (byProduct / sourceWeight) * 100,\n      lbs_per_hour: durationHours > 0 ? sourceWeight / durationHours : 0\n    }\n  };\n});"
+            },
+            "id": "1e8d6f51-874e-4f7f-8c31-7e8c07e0b5f1",
+            "name": "Calculate Metrics",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 1,
+            "position": [
+                650,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "executeQuery",
+                "query": "INSERT INTO batches (cutter_id, species_id, source_weight, primary_yield, usable_trim, by_product, start_time, end_time, yield_primary_pct, yield_trim_pct, yield_byproduct_pct, lbs_per_hour)\nVALUES ({{ $json.cutter_id }}, {{ $json.species_id }}, {{ $json.source_weight }}, {{ $json.primary_yield }}, {{ $json.usable_trim }}, {{ $json.by_product }}, '{{ $json.start_time }}', '{{ $json.end_time }}', {{ $json.yield_primary_pct }}, {{ $json.yield_trim_pct }}, {{ $json.yield_byproduct_pct }}, {{ $json.lbs_per_hour }})"
+            },
+            "id": "c6a1d94e-2f5a-4971-97b7-6bcfc23945a0",
+            "name": "Save Batch to SQLite",
+            "type": "n8n-nodes-base.sqlite",
+            "typeVersion": 1,
+            "position": [
+                850,
+                300
+            ],
+            "credentials": {
+                "sqlite": {
+                    "id": "YOUR_SQLITE_CRED_ID"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "{\n  \"status\": \"success\",\n  \"message\": \"Batch data recorded successfully\"\n}"
+            },
+            "id": "d7b2e05a-5f5a-4971-97b7-6bcfc23945a0",
+            "name": "Respond to Webhook",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1,
+            "position": [
+                1050,
+                300
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "Calculate Metrics",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Calculate Metrics": {
+            "main": [
+                [
+                    {
+                        "node": "Save Batch to SQLite",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Save Batch to SQLite": {
+            "main": [
+                [
+                    {
+                        "node": "Respond to Webhook",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {}
+}

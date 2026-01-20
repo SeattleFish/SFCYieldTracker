@@ -1,0 +1,137 @@
+{
+    "name": "Seafood Yield Tracker - Dashboard & Management",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "GET",
+                "path": "performance-dashboard",
+                "options": {}
+            },
+            "id": "e2d7e974-5f5a-4971-97b7-6bcfc23945a0",
+            "name": "Webhook: Dashboard",
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 1,
+            "position": [
+                450,
+                300
+            ]
+        },
+        {
+            "parameters": {
+                "operation": "executeQuery",
+                "query": "SELECT c.name as cutter, AVG(yield_primary_pct) as avg_yield, AVG(lbs_per_hour) as avg_throughput\nFROM batches b\nJOIN cutters c ON b.cutter_id = c.id\nGROUP BY c.id"
+            },
+            "id": "c6a1d94e-2f5a-4971-97b7-6bcfc23945a0",
+            "name": "Get Summary: SQLite",
+            "type": "n8n-nodes-base.sqlite",
+            "typeVersion": 1,
+            "position": [
+                650,
+                300
+            ],
+            "credentials": {
+                "sqlite": {
+                    "id": "YOUR_SQLITE_CRED_ID"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "operation": "executeQuery",
+                "query": "SELECT b.*, c.name as cutter, s.name as species\nFROM batches b\nJOIN cutters c ON b.cutter_id = c.id\nJOIN species s ON b.species_id = s.id\nORDER BY b.created_at DESC"
+            },
+            "id": "c6a1d94e-2f5a-4971-97b7-6bcfc23945a1",
+            "name": "Get Batches: SQLite",
+            "type": "n8n-nodes-base.sqlite",
+            "typeVersion": 1,
+            "position": [
+                650,
+                500
+            ],
+            "credentials": {
+                "sqlite": {
+                    "id": "YOUR_SQLITE_CRED_ID"
+                }
+            }
+        },
+        {
+            "parameters": {
+                "jsCode": "const summary = $node[\"Get Summary: SQLite\"].json;\nconst batches = $node[\"Get Batches: SQLite\"].json;\n\nreturn [{\n  json: {\n    summary,\n    batches\n  }\n}];"
+            },
+            "id": "1e8d6f51-874e-4f7f-8c31-7e8c07e0b5f2",
+            "name": "Combine Data",
+            "type": "n8n-nodes-base.code",
+            "typeVersion": 1,
+            "position": [
+                850,
+                400
+            ]
+        },
+        {
+            "parameters": {
+                "respondWith": "json",
+                "responseBody": "={{ $json }}"
+            },
+            "id": "d7b2e05a-5f5a-4971-97b7-6bcfc23945a1",
+            "name": "Respond Dashboard",
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1,
+            "position": [
+                1050,
+                400
+            ]
+        }
+    ],
+    "connections": {
+        "Webhook: Dashboard": {
+            "main": [
+                [
+                    {
+                        "node": "Get Summary: SQLite",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "Get Batches: SQLite",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Get Summary: SQLite": {
+            "main": [
+                [
+                    {
+                        "node": "Combine Data",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Get Batches: SQLite": {
+            "main": [
+                [
+                    {
+                        "node": "Combine Data",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Combine Data": {
+            "main": [
+                [
+                    {
+                        "node": "Respond Dashboard",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "settings": {}
+}
