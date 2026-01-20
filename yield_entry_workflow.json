@@ -51,7 +51,17 @@
         {
             "parameters": {
                 "respondWith": "json",
-                "responseBody": "{\n  \"status\": \"success\",\n  \"message\": \"Batch data recorded successfully\"\n}"
+                "responseBody": "{\n  \"status\": \"success\",\n  \"message\": \"Batch data recorded successfully\"\n}",
+                "options": {
+                    "responseHeaders": {
+                        "entries": [
+                            {
+                                "name": "Access-Control-Allow-Origin",
+                                "value": "*"
+                            }
+                        ]
+                    }
+                }
             },
             "id": "d7b2e05a-5f5a-4971-97b7-6bcfc23945a0",
             "name": "Respond to Webhook",
