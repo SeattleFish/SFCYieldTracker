@@ -32,7 +32,7 @@
         {
             "parameters": {
                 "operation": "executeQuery",
-                "query": "INSERT INTO batches (cutter_id, species_id, source_weight, primary_yield, usable_trim, by_product, start_time, end_time, yield_primary_pct, yield_trim_pct, yield_byproduct_pct, lbs_per_hour, supervisor_name)\nVALUES ({{ $json.cutter_id }}, {{ $json.species_id }}, {{ $json.source_weight }}, {{ $json.primary_yield }}, {{ $json.usable_trim }}, {{ $json.by_product }}, '{{ $json.start_time }}', '{{ $json.end_time }}', {{ $json.yield_primary_pct }}, {{ $json.yield_trim_pct }}, {{ $json.yield_byproduct_pct }}, {{ $json.lbs_per_hour }}, '{{ $json.supervisor_name }}')"
+                "query": "INSERT INTO batches (cutter_id, source_code, finished_good, source_weight, primary_yield, usable_trim, by_product, start_time, end_time, yield_primary_pct, yield_trim_pct, yield_byproduct_pct, lbs_per_hour, supervisor_name)\nVALUES ({{ $json.cutter_id }}, '{{ $json.source_code }}', '{{ $json.finished_good }}', {{ $json.source_weight }}, {{ $json.primary_yield }}, {{ $json.usable_trim }}, {{ $json.by_product }}, '{{ $json.start_time }}', '{{ $json.end_time }}', {{ $json.yield_primary_pct }}, {{ $json.yield_trim_pct }}, {{ $json.yield_byproduct_pct }}, {{ $json.lbs_per_hour }}, '{{ $json.supervisor_name }}')"
             },
             "id": "c6a1d94e-2f5a-4971-97b7-6bcfc23945a0",
             "name": "Save Batch to SQLite",
