@@ -361,7 +361,7 @@
 
     <script>
         // Replace with your actual n8n webhook URLs
-        const ENTRY_WEBHOOK = 'https://seattlefish.app.n8n.cloud/webhook-test/yield-entry';
+        const ENTRY_WEBHOOK = 'https://seattlefish.app.n8n.cloud/webhook/yield-entry';
 
         // Auto-select text on focus
         document.addEventListener('focus', function (e) {
@@ -398,6 +398,13 @@
             const dateVal = document.getElementById('batch_date').value;
             const startVal = document.getElementById('start_time').value;
             const endVal = document.getElementById('end_time').value;
+
+            if (startVal === endVal) {
+                showToast('Start Time and End Time cannot be the same.', true);
+                document.getElementById('start_time').style.borderColor = 'var(--danger)';
+                document.getElementById('end_time').style.borderColor = 'var(--danger)';
+                return;
+            }
 
             // Construct timestamps
             const startDateTime = new Date(`${dateVal}T${startVal}`);
