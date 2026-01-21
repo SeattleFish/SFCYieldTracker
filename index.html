@@ -294,8 +294,12 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Product Code</label>
-                            <input type="text" id="species" placeholder="Enter Code..." required>
+                            <label>Source Code</label>
+                            <input type="text" id="source_code" placeholder="Enter Source Code..." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Finished Good</label>
+                            <input type="text" id="finished_good" placeholder="Enter Finished Good..." required>
                         </div>
                     </div>
 
@@ -406,7 +410,8 @@
 
             const formData = {
                 cutter_id: document.getElementById('cutter').value,
-                species_id: document.getElementById('species').value,
+                source_code: document.getElementById('source_code').value,
+                finished_good: document.getElementById('finished_good').value,
                 source_weight: document.getElementById('source_weight').value,
                 primary_yield: document.getElementById('primary_yield').value,
                 usable_trim: document.getElementById('usable_trim').value,
