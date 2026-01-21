@@ -298,8 +298,8 @@
                             <input type="text" id="source_code" placeholder="Enter Source Code..." required>
                         </div>
                         <div class="form-group">
-                            <label>Finished Good</label>
-                            <input type="text" id="finished_good" placeholder="Enter Finished Good..." required>
+                            <label>Finished Code</label>
+                            <input type="text" id="finished_code" placeholder="Enter Finished Code..." required>
                         </div>
                     </div>
 
@@ -327,8 +327,8 @@
                             <input type="number" step="0.01" id="source_weight" placeholder="0.00" required>
                         </div>
                         <div class="form-group">
-                            <label>Primary Yield (lbs)</label>
-                            <input type="number" step="0.01" id="primary_yield" placeholder="0.00" required>
+                            <label>Finished Weight (lbs)</label>
+                            <input type="number" step="0.01" id="finished_weight" placeholder="0.00" required>
                         </div>
                     </div>
 
@@ -411,9 +411,9 @@
             const formData = {
                 cutter_id: document.getElementById('cutter').value,
                 source_code: document.getElementById('source_code').value,
-                finished_good: document.getElementById('finished_good').value,
+                finished_code: document.getElementById('finished_code').value,
                 source_weight: document.getElementById('source_weight').value,
-                primary_yield: document.getElementById('primary_yield').value,
+                finished_weight: document.getElementById('finished_weight').value,
                 usable_trim: document.getElementById('usable_trim').value,
                 by_product: document.getElementById('by_product').value,
                 supervisor_name: document.getElementById('supervisor_name').value,
