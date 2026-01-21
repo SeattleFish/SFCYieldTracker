@@ -18,7 +18,7 @@
         },
         {
             "parameters": {
-                "jsCode": "const items = $input.all();\n\nreturn items.map(item => {\n  const data = item.json.body;\n  \n  const sourceWeight = parseFloat(data.source_weight);\n  const primaryYield = parseFloat(data.primary_yield);\n  const usableTrim = parseFloat(data.usable_trim);\n  const byProduct = parseFloat(data.by_product);\n  \n  const startTime = DateTime.fromISO(data.start_time);\n  const endTime = DateTime.fromISO(data.end_time);\n  \n  const durationHours = endTime.diff(startTime, 'hours').hours;\n  \n  return {\n    json: {\n      ...data,\n      yield_primary_pct: (primaryYield / sourceWeight) * 100,\n      yield_trim_pct: (usableTrim / sourceWeight) * 100,\n      yield_byproduct_pct: (byProduct / sourceWeight) * 100,\n      lbs_per_hour: durationHours > 0 ? sourceWeight / durationHours : 0\n    }\n  };\n});"
+                "jsCode": "const items = $input.all();\n\nreturn items.map(item => {\n  const data = item.json.body;\n  \n  const sourceWeight = parseFloat(data.source_weight);\n  const finishedWeight = parseFloat(data.finished_weight);\n  const usableTrim = parseFloat(data.usable_trim);\n  const byProduct = parseFloat(data.by_product);\n  \n  const startTime = DateTime.fromISO(data.start_time);\n  const endTime = DateTime.fromISO(data.end_time);\n  \n  const durationHours = endTime.diff(startTime, 'hours').hours;\n  \n  return {\n    json: {\n      ...data,\n      yield_primary_pct: (finishedWeight / sourceWeight) * 100,\n      yield_trim_pct: (usableTrim / sourceWeight) * 100,\n      yield_byproduct_pct: (byProduct / sourceWeight) * 100,\n      lbs_per_hour: durationHours > 0 ? sourceWeight / durationHours : 0\n    }\n  };\n});"
             },
             "id": "1e8d6f51-874e-4f7f-8c31-7e8c07e0b5f1",
             "name": "Calculate Metrics",
@@ -32,7 +32,7 @@
         {
             "parameters": {
                 "operation": "executeQuery",
-                "query": "INSERT INTO batches (cutter_id, source_code, finished_good, source_weight, primary_yield, usable_trim, by_product, start_time, end_time, yield_primary_pct, yield_trim_pct, yield_byproduct_pct, lbs_per_hour, supervisor_name)\nVALUES ({{ $json.cutter_id }}, '{{ $json.source_code }}', '{{ $json.finished_good }}', {{ $json.source_weight }}, {{ $json.primary_yield }}, {{ $json.usable_trim }}, {{ $json.by_product }}, '{{ $json.start_time }}', '{{ $json.end_time }}', {{ $json.yield_primary_pct }}, {{ $json.yield_trim_pct }}, {{ $json.yield_byproduct_pct }}, {{ $json.lbs_per_hour }}, '{{ $json.supervisor_name }}')"
+                "query": "INSERT INTO batches (cutter_id, source_code, finished_good, source_weight, primary_yield, usable_trim, by_product, start_time, end_time, yield_primary_pct, yield_trim_pct, yield_byproduct_pct, lbs_per_hour, supervisor_name)\nVALUES ({{ $json.cutter_id }}, '{{ $json.source_code }}', '{{ $json.finished_code }}', {{ $json.source_weight }}, {{ $json.finished_weight }}, {{ $json.usable_trim }}, {{ $json.by_product }}, '{{ $json.start_time }}', '{{ $json.end_time }}', {{ $json.yield_primary_pct }}, {{ $json.yield_trim_pct }}, {{ $json.yield_byproduct_pct }}, {{ $json.lbs_per_hour }}, '{{ $json.supervisor_name }}')"
             },
             "id": "c6a1d94e-2f5a-4971-97b7-6bcfc23945a0",
             "name": "Save Batch to SQLite",
